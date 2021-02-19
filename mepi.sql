@@ -8,11 +8,19 @@ alter table customer drop constraint street_credit_must_be_in_range;
 -- Drop old foreign key constraints
 alter table customer drop constraint customer_address_fk;
 alter table contract drop constraint contract_customer_fk;
+alter table contract drop constraint contract_payment_method_fk;
+alter table contract drop constraint contract_plan_fk;
+alter table contract drop constraint contract_risk_fk;
+alter table contract drop constraint contract_property_fk;
 
 -- Drop primary key constraints
 alter table contact_address drop constraint contact_address_pk;
 alter table customer drop constraint customer_pk;
 alter table contract drop constraint contract_pk;
+alter table payment_method drop constraint payment_method_pk;
+alter table plan drop constraint plan_pk;
+alter table risk drop constraint risk_pk;
+alter table property drop constraint property_pk;
 
 -- Drop old tables
 drop table contact_address;
@@ -89,7 +97,6 @@ create table payout (
     payout_date date default sysdate
 );
 create table payment_method (
-    payment_method_id integer,
     customer_id integer,
     external_id integer,
     ledger varchar2(80)
@@ -106,6 +113,14 @@ alter table customer
 add customer_id number generated always as identity;
 alter table contract
 add contract_id number generated always as identity;
+alter table payment_method
+add payment_method_id number generated always as identity;
+alter table plan
+add plan_id number generated always as identity;
+alter table risk
+add risk_id number generated always as identity;
+alter table property
+add property_id number generated always as identity;
 
 -- Create new primary key constraints
 alter table contact_address
@@ -114,12 +129,28 @@ alter table customer
 add constraint customer_pk primary key(customer_id);
 alter table contract
 add constraint contract_pk primary key(contract_id);
+alter table payment_method
+add constraint payment_method_pk primary key(payment_method_id);
+alter table plan
+add constraint plan_pk primary key(plan_id);
+alter table risk
+add constraint risk_pk primary key(risk_id);
+alter table property
+add constraint property_pk primary key(property_id);
 
 -- Create new foreign key constraints
 alter table customer
 add constraint customer_address_fk foreign key(contact_address_id) references contact_address(contact_address_id);
 alter table contract
 add constraint contract_customer_fk foreign key(customer_id) references customer(customer_id);
+alter table contract
+add constraint contract_payment_method_fk foreign key(payment_method_id) references payment_method(payment_method_id);
+alter table contract
+add constraint contract_risk_fk foreign key(risk_id) references risk(risk_id);
+alter table contract
+add constraint contract_plan_fk foreign key(plan_id) references plan(plan_id);
+alter table contract
+add constraint contract_property_fk foreign key(property_id) references property(property_id);
 
 -- Create new other constraints
 alter table contact_address
