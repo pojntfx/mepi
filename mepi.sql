@@ -7,6 +7,11 @@ drop table customer;
 drop table contract;
 drop table plan;
 drop table property;
+drop table product;
+drop table bill;
+drop table payment;
+drop table claim;
+drop table payout;
 
 whenever sqlerror exit sql.sqlcode;
 
@@ -53,4 +58,36 @@ create table property (
         property_id number,
         product_id number,
         contract_id number
+);
+
+create table product (
+        product_id number not null,
+        name varchar2(80),
+        description varchar2(80)
+);
+
+create table bill (
+        bill_id number not null,
+        contract_id number 
+);
+
+create table payment (
+        payment_id number not null,
+        bill_id number,
+        payment_date date
+);
+
+create table claim (
+        claim_id number not null,
+        compensation_amount float(2),
+        rejected number not null,
+        rejected_reason varchar2(255),
+        contract_id number,
+        claim_date date
+);
+
+create table payout (
+        payout_id number not null,
+        claim_id number,
+        payout_date date
 );
