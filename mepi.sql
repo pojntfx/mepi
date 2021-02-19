@@ -13,6 +13,7 @@ alter table contract drop constraint contract_payment_method_fk;
 alter table contract drop constraint contract_plan_fk;
 alter table contract drop constraint contract_risk_fk;
 alter table contract drop constraint contract_property_fk;
+alter table property drop constraint property_product_fk;
 
 -- Drop primary key constraints
 alter table contact_address drop constraint contact_address_pk;
@@ -122,6 +123,8 @@ alter table risk
 add risk_id number generated always as identity;
 alter table property
 add property_id number generated always as identity;
+alter table product
+add product_id number generated always as identity;
 
 -- Create new primary key constraints
 alter table contact_address
@@ -138,6 +141,8 @@ alter table risk
 add constraint risk_pk primary key(risk_id);
 alter table property
 add constraint property_pk primary key(property_id);
+alter table product
+add constraint product_pk primary key(product_id);
 
 -- Create new foreign key constraints
 alter table customer
@@ -152,6 +157,8 @@ alter table contract
 add constraint contract_plan_fk foreign key(plan_id) references plan(plan_id);
 alter table contract
 add constraint contract_property_fk foreign key(property_id) references property(property_id);
+alter table property
+add constraint property_product_fk foreign key(product_id) references product(product_id);
 
 -- Create new other constraints
 alter table contact_address
