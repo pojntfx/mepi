@@ -4,6 +4,7 @@ whenever sqlerror continue;
 -- Drop old other constraints
 alter table contact_address drop constraint region_name_must_be_known;
 alter table customer drop constraint street_credit_must_be_in_range;
+alter table plan drop constraint warning_interest_percentage;
 
 -- Drop old foreign key constraints
 alter table customer drop constraint customer_address_fk;
@@ -65,10 +66,10 @@ create table contract (
 create table plan (
     name varchar(80) not null,
     base_monthly_cost float(2) not null,
+    initial_cost float(2) not null,
     warning_interval interval year to month not null,
     max_warnings number not null,
-    warning_interest float,
-    initial_cost float(2) not null
+    warning_interest float not null
 );
 create table property (
     product_id number,
@@ -157,3 +158,5 @@ alter table contact_address
 add constraint region_name_must_be_known check(region_name in ('eria', 'rhov', 'gond', 'mord'));
 alter table customer
 add constraint street_credit_must_be_in_range check(street_credit between 1 and 10);
+alter table plan
+add constraint warning_interest_percentage check(warning_interest between 0 and 1);
