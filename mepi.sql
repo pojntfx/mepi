@@ -1,5 +1,9 @@
--- Drop old tables
+-- Disable errors
 whenever sqlerror continue;
+
+-- Drop old constraints
+alter table contact_address drop constraint region_name_must_be_known;
+-- Drop old tables
 drop table contact_address;
 drop table customer;
 drop table contract;
@@ -12,11 +16,12 @@ drop table claim;
 drop table payout;
 drop table payment_method;
 drop table risk;
+
+-- Enable errors
 whenever sqlerror exit sql.sqlcode;
 
 -- Create new tables
 create table contact_address (
-    address_id number not null,
     region_name char(4) not null,
     city varchar2(80) not null,
     street varchar2(80) not null,
@@ -46,10 +51,11 @@ create table plan (
     base_monthly_cost float(2) not null,
     warning_interval interval year to month not null,
     max_warnings number not null,
-    warning_interest float
+    warning_interest float,
+    initial_cost float(2) not null
 );
 create table property (
-    property_id number,
+    property_id number not null,
     product_id number,
     contract_id number
 );
@@ -92,3 +98,11 @@ create table risk (
     reason varchar2(80),
     multiplier float
 );
+
+-- Create identity columns
+alter table contact_address
+add contact_address_id number generated always as identity;
+
+-- Create new constraints
+alter table contact_address
+add constraint region_name_must_be_known check(region_name in ('eria', 'rhov', 'gond', 'mord'));
