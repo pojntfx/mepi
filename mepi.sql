@@ -5,6 +5,7 @@ whenever sqlerror continue;
 alter table contact_address drop constraint region_name_must_be_known;
 alter table customer drop constraint street_credit_must_be_in_range;
 alter table plan drop constraint warning_interest_percentage;
+alter table claim drop constraint claim_rejected_boolean;
 
 -- Drop old foreign key constraints
 alter table customer drop constraint customer_address_fk;
@@ -14,6 +15,10 @@ alter table contract drop constraint contract_plan_fk;
 alter table contract drop constraint contract_risk_fk;
 alter table contract drop constraint contract_property_fk;
 alter table property drop constraint property_product_fk;
+alter table bill drop constraint bill_contract_fk;
+alter table payment drop constraint payment_bill_fk;
+alter table claim drop constraint claim_contract_fk;
+alter table payout drop constraint payout_claim_fk;
 
 -- Drop primary key constraints
 alter table contact_address drop constraint contact_address_pk;
@@ -23,6 +28,10 @@ alter table payment_method drop constraint payment_method_pk;
 alter table plan drop constraint plan_pk;
 alter table risk drop constraint risk_pk;
 alter table property drop constraint property_pk;
+alter table payment drop constraint payment_pk;
+alter table bill drop constraint bill_pk;
+alter table payout drop constraint payout_pk;
+alter table claim drop constraint claim_pk;
 
 -- Drop old tables
 drop table contact_address;
@@ -125,6 +134,14 @@ alter table property
 add property_id number generated always as identity;
 alter table product
 add product_id number generated always as identity;
+alter table bill
+add bill_id number generated always as identity;
+alter table payment
+add payment_id number generated always as identity;
+alter table claim
+add claim_id number generated always as identity;
+alter table payout
+add payout_id number generated always as identity;
 
 -- Create new primary key constraints
 alter table contact_address
@@ -143,6 +160,14 @@ alter table property
 add constraint property_pk primary key(property_id);
 alter table product
 add constraint product_pk primary key(product_id);
+alter table bill
+add constraint bill_pk primary key(bill_id);
+alter table payment
+add constraint payment_pk primary key(payment_id);
+alter table payout
+add constraint payout_pk primary key(payout_id);
+alter table claim
+add constraint claim_pk primary key(claim_id);
 
 -- Create new foreign key constraints
 alter table customer
@@ -159,6 +184,14 @@ alter table contract
 add constraint contract_property_fk foreign key(property_id) references property(property_id);
 alter table property
 add constraint property_product_fk foreign key(product_id) references product(product_id);
+alter table bill
+add constraint bill_contract_fk foreign key(contract_id) references contract(contract_id);
+alter table payment
+add constraint payment_bill_fk foreign key(bill_id) references bill(bill_id);
+alter table claim
+add constraint claim_contract_fk foreign key(contract_id) references contract(contract_id);
+alter table payout
+add constraint payout_claim_fk foreign key(claim_id) references claim(claim_id);
 
 -- Create new other constraints
 alter table contact_address
@@ -167,3 +200,5 @@ alter table customer
 add constraint street_credit_must_be_in_range check(street_credit between 1 and 10);
 alter table plan
 add constraint warning_interest_percentage check(warning_interest between 0 and 1);
+alter table claim
+add constraint claim_rejected_boolean check(rejected in (0,1));
