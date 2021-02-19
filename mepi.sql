@@ -108,13 +108,14 @@ create table payout (
     payout_date date default sysdate
 );
 create table payment_method (
+    priority integer not null,
     customer_id integer,
     external_id integer,
-    ledger varchar2(80)
+    ledger varchar2(255) not null
 );
 create table risk (
-    reason varchar2(80),
-    multiplier float
+    reason varchar2(255) not null,
+    multiplier float not null
 );
 
 -- Create identity columns
