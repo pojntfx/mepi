@@ -7,10 +7,12 @@ alter table customer drop constraint street_credit_must_be_in_range;
 
 -- Drop old foreign key constraints
 alter table customer drop constraint customer_address_fk;
+alter table contract drop constraint contract_customer_fk;
 
 -- Drop primary key constraints
 alter table contact_address drop constraint contact_address_pk;
 alter table customer drop constraint customer_pk;
+alter table contract drop constraint contract_pk;
 
 -- Drop old tables
 drop table contact_address;
@@ -44,7 +46,7 @@ create table customer (
     contact_address_id number
 );
 create table contract (
-    acceptance_date date not null,
+    acceptance_date date default sysdate not null,
     duration interval year to month not null,
     customer_id number,
     payment_method_id number,
@@ -73,18 +75,18 @@ create table bill (
 );
 create table payment (
     bill_id number,
-    payment_date date
+    payment_date date default sysdate
 );
 create table claim (
     compensation_amount float(2),
     rejected number not null,
     rejected_reason varchar2(255),
     contract_id number,
-    claim_date date
+    claim_date date default sysdate
 );
 create table payout (
     claim_id number,
-    payout_date date
+    payout_date date default sysdate
 );
 create table payment_method (
     payment_method_id integer,
@@ -102,16 +104,22 @@ alter table contact_address
 add contact_address_id number generated always as identity;
 alter table customer
 add customer_id number generated always as identity;
+alter table contract
+add contract_id number generated always as identity;
 
 -- Create new primary key constraints
 alter table contact_address
 add constraint contact_address_pk primary key(contact_address_id);
 alter table customer
 add constraint customer_pk primary key(customer_id);
+alter table contract
+add constraint contract_pk primary key(contract_id);
 
 -- Create new foreign key constraints
 alter table customer
 add constraint customer_address_fk foreign key(contact_address_id) references contact_address(contact_address_id);
+alter table contract
+add constraint contract_customer_fk foreign key(customer_id) references customer(customer_id);
 
 -- Create new other constraints
 alter table contact_address
