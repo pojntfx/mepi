@@ -3,6 +3,7 @@ whenever sqlerror continue;
 
 -- Drop old triggers
 drop trigger contract_date_ensure;
+drop trigger street_credibility_ensure;
 
 -- Drop old views
 drop view liabilities;
@@ -241,6 +242,22 @@ where product.product_id = property.product_id (+)
 group by product.name;
 
 -- Create new triggers
-create or replace trigger contract_date_ensure before
-insert on contract for each row begin :new.acceptance_date := sysdate;
+create or replace trigger contract_date_ensure
+before insert
+on contract
+for each row 
+begin
+    :new.acceptance_date := sysdate;
+end;
+/
+create or replace trigger street_credibility_ensure
+before update
+on customer
+for each row
+begin
+    if :new.street_credit < :old.street_credit then
+        update contract set risk_multiplier = case when ( risk_multiplier > 0.1 and risk_multiplier < 2 ) then risk_multiplier + 0.1 else risk_multiplier end where contract.customer_id = customer_id;
+    elsif :new.street_credit > :old.street_credit then
+        update contract set risk_multiplier = case when ( risk_multiplier > 0.1 and risk_multiplier < 2 ) then risk_multiplier - 0.1 else risk_multiplier end where contract.customer_id = customer_id;
+    end if;
 end;
