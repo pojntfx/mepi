@@ -928,17 +928,16 @@ values(8, 8);
 
 -- Demo
 
+-- Complex query: Shows all products which Legolas has insured
 select * from product, property, contract, customer where product.product_id = property.product_id and property.property_id = contract.property_id and contract.customer_id = customer.customer_id and customer.first_name = 'Legolas';
 
+-- Test the views
 select * from liabilities;
-
 select * from user_overview order by customer_id desc;
-
 select * from demands;
-
 select * from product_overview;
 
-------
+-- Test the tables
 select * from contact_address;
 select * from customer;
 select * from contract;
@@ -949,6 +948,4 @@ select * from bill;
 select * from plan;
 select * from payment;
 select * from payout;
-select * from claim;
-
 select * from claim;
