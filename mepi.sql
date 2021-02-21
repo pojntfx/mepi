@@ -98,12 +98,8 @@ create table product (
     name varchar2(80),
     description varchar2(255)
 );
-create table property (
-    product_id number
-);
-create table bill (
-    contract_id number
-);
+create table property (product_id number);
+create table bill (contract_id number);
 create table payment (
     bill_id number,
     payment_date date default sysdate
@@ -200,26 +196,25 @@ add constraint payout_claim_fk foreign key(claim_id) references claim(claim_id);
 alter table contact_address
 add constraint region_name_must_be_known check(region_name in ('eria', 'rhov', 'gond', 'mord'));
 alter table customer
-add constraint street_credit_must_be_in_range check(street_credit between 1 and 10);
+add constraint street_credit_must_be_in_range check(
+        street_credit between 1 and 10
+    );
 alter table plan
-add constraint warning_interest_percentage check(warning_interest between 0 and 2);
+add constraint warning_interest_percentage check(
+        warning_interest between 0 and 2
+    );
 alter table claim
-add constraint claim_rejected_boolean check(rejected in (0,1));
+add constraint claim_rejected_boolean check(rejected in (0, 1));
 alter table contract
-add constraint contract_risk_percentage check(risk_multiplier between 0 and 2);
-
-
-
-
-
+add constraint contract_risk_percentage check(
+        risk_multiplier between 0 and 2
+    );
 
 -- Create new views
 create or replace view liabilities as
 select sum(claim.compensation_amount) as componensation_amount
 from claim
-where claim.claim_date between to_date('01.01.3000', 'DD.MM.YYYY') and to_date('01.01.3040', 'DD.MM.YYYY');
-
-
+where claim.rejected = 0;
 create or replace view user_overview as
 select customer.customer_id,
     customer.first_name,
@@ -230,8 +225,6 @@ from customer,
     plan
 where customer.customer_id = contract.customer_id
     and contract.plan_id = plan.plan_id;
-    
-    
 create or replace view demands as
 select bill.bill_id,
     customer.first_name,
@@ -246,9 +239,6 @@ where bill.bill_id not in (payment.bill_id)
     and bill.contract_id = contract.contract_id
     and contract.customer_id = customer.customer_id
     and contract.plan_id = plan.plan_id;
-    
-    
-    
 create or replace view product_overview as
 select product.name,
     count(*) as times_insured
@@ -257,33 +247,35 @@ from product,
 where product.product_id = property.product_id (+)
 group by product.name;
 
-
-
-
-
-
 -- Create new triggers
-create or replace trigger contract_date_ensure
-before insert
-on contract
-for each row 
-begin
-    :new.acceptance_date := sysdate;
+create or replace trigger contract_date_ensure before
+insert on contract for each row begin :new.acceptance_date := sysdate;
 end;
 /
-create or replace trigger street_credibility_ensure
-before update
-on customer
-for each row
-begin
-    if :new.street_credit < :old.street_credit then
-        update contract set risk_multiplier = case when ( risk_multiplier > 0.1 and risk_multiplier < 2 ) then risk_multiplier + 0.1 else risk_multiplier end where contract.customer_id = customer_id;
-    elsif :new.street_credit > :old.street_credit then
-        update contract set risk_multiplier = case when ( risk_multiplier > 0.1 and risk_multiplier < 2 ) then risk_multiplier - 0.1 else risk_multiplier end where contract.customer_id = customer_id;
-    end if;
+create or replace trigger street_credibility_ensure before
+update on customer for each row begin if :new.street_credit < :old.street_credit then
+update contract
+set risk_multiplier = case
+        when (
+            risk_multiplier > 0.1
+            and risk_multiplier < 2
+        ) then risk_multiplier + 0.1
+        else risk_multiplier
+    end
+where contract.customer_id = customer_id;
+elsif :new.street_credit > :old.street_credit then
+update contract
+set risk_multiplier = case
+        when (
+            risk_multiplier > 0.1
+            and risk_multiplier < 2
+        ) then risk_multiplier - 0.1
+        else risk_multiplier
+    end
+where contract.customer_id = customer_id;
+end if;
 end;
-/
-
+/ 
 -- Create new indexes
 create index customer_full_name on customer(first_name, last_name);
 create index product_name_description on product(name, description);
@@ -330,7 +322,13 @@ insert into contact_address (
         street,
         house_name
     )
-values(2, 'gond', 'Minas Tirith', 'White Tower', 'Top Tower');
+values(
+        2,
+        'gond',
+        'Minas Tirith',
+        'White Tower',
+        'Top Tower'
+    );
 insert into customer (
         customer_id,
         first_name,
@@ -350,8 +348,8 @@ values(
 insert into product (product_id, name, description)
 values(
         2,
-        'Andúril',
-        'Andúril, also called the Flame of the West, was the sword which was reforged from the shards of Narsil'
+        'AndÃºril',
+        'AndÃºril, also called the Flame of the West, was the sword which was reforged from the shards of Narsil'
     );
 insert into property (property_id, product_id)
 values(2, 2);
@@ -416,7 +414,13 @@ insert into contact_address (
         street,
         house_name
     )
-values(1, 'eria', 'The Shire', 'Gardenerstreet', 'Under the Stone');
+values(
+        1,
+        'eria',
+        'The Shire',
+        'Gardenerstreet',
+        'Under the Stone'
+    );
 insert into customer (
         customer_id,
         first_name,
@@ -583,7 +587,6 @@ insert into bill (bill_id, contract_id)
 values(3, 3);
 insert into payout (payout_id, claim_id, payout_date)
 values(3, 3, to_date('08.07.3018', 'DD.MM.YYYY'));
-    
 
 -- Legolas Greenleaf
 insert into contact_address (
@@ -681,7 +684,6 @@ values(4, 4);
 insert into payout (payout_id, claim_id, payout_date)
 values(4, 4, to_date('08.07.3018', 'DD.MM.YYYY'));
 
-
 -- Frodo
 insert into contact_address (
         contact_address_id,
@@ -690,7 +692,13 @@ insert into contact_address (
         street,
         house_name
     )
-values(5, 'eria', 'The Shire', 'Chosenstreet', 'The lowered ceiling');
+values(
+        5,
+        'eria',
+        'The Shire',
+        'Chosenstreet',
+        'The lowered ceiling'
+    );
 insert into customer (
         customer_id,
         first_name,
@@ -765,7 +773,6 @@ insert into bill (bill_id, contract_id)
 values(5, 5);
 insert into payment (payment_id, bill_id, payment_date)
 values(5, 5, to_date('12.08.3011', 'DD.MM.YYYY'));
-
 
 -- Gimli 
 insert into contact_address (
@@ -855,7 +862,6 @@ values(
 insert into bill (bill_id, contract_id)
 values(6, 6);
 
-
 -- Legolas Greenleaf
 insert into product (product_id, name, description)
 values(
@@ -889,7 +895,6 @@ values(
     );
 insert into bill (bill_id, contract_id)
 values(7, 7);
-
 
 -- Gandalf the Grey
 insert into product (product_id, name, description)
@@ -925,27 +930,50 @@ values(
 insert into bill (bill_id, contract_id)
 values(8, 8);
 
-
 -- Demo
 
 -- Complex query: Shows all products which Legolas has insured
-select * from product, property, contract, customer where product.product_id = property.product_id and property.property_id = contract.property_id and contract.customer_id = customer.customer_id and customer.first_name = 'Legolas';
+select *
+from product,
+    property,
+    contract,
+    customer
+where product.product_id = property.product_id
+    and property.property_id = contract.property_id
+    and contract.customer_id = customer.customer_id
+    and customer.first_name = 'Legolas';
 
 -- Test the views
-select * from liabilities;
-select * from user_overview order by customer_id desc;
-select * from demands;
-select * from product_overview;
+select *
+from liabilities;
+select *
+from user_overview
+order by customer_id desc;
+select *
+from demands;
+select *
+from product_overview;
 
 -- Test the tables
-select * from contact_address;
-select * from customer;
-select * from contract;
-select * from payment_method;
-select * from property;
-select * from product;
-select * from bill;
-select * from plan;
-select * from payment;
-select * from payout;
-select * from claim;
+select *
+from contact_address;
+select *
+from customer;
+select *
+from contract;
+select *
+from payment_method;
+select *
+from property;
+select *
+from product;
+select *
+from bill;
+select *
+from plan;
+select *
+from payment;
+select *
+from payout;
+select *
+from claim;
