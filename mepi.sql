@@ -15,13 +15,13 @@ alter table contact_address drop constraint region_name_must_be_known;
 alter table customer drop constraint street_credit_must_be_in_range;
 alter table plan drop constraint warning_interest_percentage;
 alter table claim drop constraint claim_rejected_boolean;
+alter table contract drop constraint contract_risk_percentage;
 
 -- Drop old foreign key constraints
 alter table customer drop constraint customer_address_fk;
 alter table contract drop constraint contract_customer_fk;
 alter table contract drop constraint contract_payment_method_fk;
 alter table contract drop constraint contract_plan_fk;
-alter table contract drop constraint contract_risk_fk;
 alter table contract drop constraint contract_property_fk;
 alter table property drop constraint property_product_fk;
 alter table bill drop constraint bill_contract_fk;
@@ -35,7 +35,6 @@ alter table customer drop constraint customer_pk;
 alter table contract drop constraint contract_pk;
 alter table payment_method drop constraint payment_method_pk;
 alter table plan drop constraint plan_pk;
-alter table risk drop constraint risk_pk;
 alter table property drop constraint property_pk;
 alter table payment drop constraint payment_pk;
 alter table bill drop constraint bill_pk;
@@ -54,7 +53,6 @@ drop table payment;
 drop table claim;
 drop table payout;
 drop table payment_method;
-drop table risk;
 
 -- Enable errors
 whenever sqlerror exit sql.sqlcode;
@@ -79,8 +77,9 @@ create table contract (
     customer_id number,
     payment_method_id number,
     plan_id number,
-    risk_id number,
-    property_id number
+    property_id number,
+    risk_reason varchar2(255) not null,
+    risk_multiplier float not null
 );
 create table plan (
     name varchar(80) not null,
@@ -121,10 +120,6 @@ create table payment_method (
     external_id integer,
     ledger varchar2(255) not null
 );
-create table risk (
-    reason varchar2(255) not null,
-    multiplier float not null
-);
 
 -- Create identity columns
 alter table contact_address
@@ -137,8 +132,6 @@ alter table payment_method
 add payment_method_id number generated always as identity;
 alter table plan
 add plan_id number generated always as identity;
-alter table risk
-add risk_id number generated always as identity;
 alter table property
 add property_id number generated always as identity;
 alter table product
@@ -163,8 +156,6 @@ alter table payment_method
 add constraint payment_method_pk primary key(payment_method_id);
 alter table plan
 add constraint plan_pk primary key(plan_id);
-alter table risk
-add constraint risk_pk primary key(risk_id);
 alter table property
 add constraint property_pk primary key(property_id);
 alter table product
@@ -185,8 +176,6 @@ alter table contract
 add constraint contract_customer_fk foreign key(customer_id) references customer(customer_id);
 alter table contract
 add constraint contract_payment_method_fk foreign key(payment_method_id) references payment_method(payment_method_id);
-alter table contract
-add constraint contract_risk_fk foreign key(risk_id) references risk(risk_id);
 alter table contract
 add constraint contract_plan_fk foreign key(plan_id) references plan(plan_id);
 alter table contract
@@ -211,6 +200,8 @@ alter table plan
 add constraint warning_interest_percentage check(warning_interest between 0 and 1);
 alter table claim
 add constraint claim_rejected_boolean check(rejected in (0,1));
+alter table contract
+add constraint contract_risk_percentage check(risk_multiplier between 0 and 2);
 
 -- Create new views
 create or replace view liabilities as
@@ -221,8 +212,7 @@ create or replace view user_overview as
 select customer.customer_id,
     customer.first_name,
     customer.last_name,
-    plan.name,
-    contract.risk_id
+    plan.name
 from customer,
     contract,
     plan
