@@ -202,7 +202,7 @@ add constraint region_name_must_be_known check(region_name in ('eria', 'rhov', '
 alter table customer
 add constraint street_credit_must_be_in_range check(street_credit between 1 and 10);
 alter table plan
-add constraint warning_interest_percentage check(warning_interest between 0 and 1);
+add constraint warning_interest_percentage check(warning_interest between 0 and 2);
 alter table claim
 add constraint claim_rejected_boolean check(rejected in (0,1));
 alter table contract
@@ -273,6 +273,38 @@ create index product_name_description on product(name, description);
 
 -- Create test data
 
+-- Plans
+insert into plan (
+        plan_id,
+        name,
+        base_monthly_cost,
+        initial_cost,
+        warning_interval,
+        max_warnings,
+        warning_interest
+    )
+values (1, 'Weapon Insurance', 12, 4, '0-6', 4, 1.2);
+insert into plan (
+        plan_id,
+        name,
+        base_monthly_cost,
+        initial_cost,
+        warning_interval,
+        max_warnings,
+        warning_interest
+    )
+values (2, 'Horse Insurance', 6, 2, '0-6', 4, 1.4);
+insert into plan (
+        plan_id,
+        name,
+        base_monthly_cost,
+        initial_cost,
+        warning_interval,
+        max_warnings,
+        warning_interest
+    )
+values (3, 'Hobbit Hole Insurance', 16, 6, '0-4', 8, 1.6);
+
 -- Aragon
 insert into contact_address (
         contact_address_id,
@@ -298,16 +330,6 @@ values(
         9,
         2
     );
-insert into plan (
-        plan_id,
-        name,
-        base_monthly_cost,
-        initial_cost,
-        warning_interval,
-        max_warnings,
-        warning_interest
-    )
-values(2, 'Weapon', 20, 16, '0-6', 6, 0.25);
 insert into product (product_id, name, description)
 values(
         2,
@@ -341,7 +363,7 @@ values(
         '2-0',
         2,
         2,
-        2,
+        1,
         2,
         'King',
         1.2
