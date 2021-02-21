@@ -4,6 +4,7 @@ whenever sqlerror continue;
 -- Drop old views
 drop view liabilities;
 drop view user_overview;
+drop view demands;
 
 -- Drop old other constraints
 alter table contact_address drop constraint region_name_must_be_known;
@@ -222,4 +223,18 @@ from customer,
     contract,
     plan
 where customer.customer_id = contract.customer_id
+    and contract.plan_id = plan.plan_id;
+create or replace view demands as
+select bill.bill_id,
+    customer.first_name,
+    customer.last_name,
+    plan.base_monthly_cost
+from bill,
+    payment,
+    contract,
+    customer,
+    plan
+where bill.bill_id not in (payment.bill_id)
+    and bill.contract_id = contract.contract_id
+    and contract.customer_id = customer.customer_id
     and contract.plan_id = plan.plan_id;
