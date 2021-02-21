@@ -124,27 +124,27 @@ create table payment_method (
 
 -- Create identity columns
 alter table contact_address
-add contact_address_id number generated always as identity;
+add contact_address_id number;
 alter table customer
-add customer_id number generated always as identity;
+add customer_id number;
 alter table contract
-add contract_id number generated always as identity;
+add contract_id number;
 alter table payment_method
-add payment_method_id number generated always as identity;
+add payment_method_id number;
 alter table plan
-add plan_id number generated always as identity;
+add plan_id number;
 alter table property
-add property_id number generated always as identity;
+add property_id number;
 alter table product
-add product_id number generated always as identity;
+add product_id number;
 alter table bill
-add bill_id number generated always as identity;
+add bill_id number;
 alter table payment
-add payment_id number generated always as identity;
+add payment_id number;
 alter table claim
-add claim_id number generated always as identity;
+add claim_id number;
 alter table payout
-add payout_id number generated always as identity;
+add payout_id number;
 
 -- Create new primary key constraints
 alter table contact_address
