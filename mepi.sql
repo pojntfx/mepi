@@ -5,6 +5,7 @@ whenever sqlerror continue;
 drop view liabilities;
 drop view user_overview;
 drop view demands;
+drop view product_overview;
 
 -- Drop old other constraints
 alter table contact_address drop constraint region_name_must_be_known;
@@ -238,3 +239,10 @@ where bill.bill_id not in (payment.bill_id)
     and bill.contract_id = contract.contract_id
     and contract.customer_id = customer.customer_id
     and contract.plan_id = plan.plan_id;
+create or replace view product_overview as
+select product.name,
+    count(*) as times_insured
+from product,
+    property
+where product.product_id = property.product_id (+)
+group by product.name;
