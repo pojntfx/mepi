@@ -1,6 +1,9 @@
 -- Disable errors
 whenever sqlerror continue;
 
+-- Drop old triggers
+drop trigger contract_date_ensure;
+
 -- Drop old views
 drop view liabilities;
 drop view user_overview;
@@ -246,3 +249,8 @@ from product,
     property
 where product.product_id = property.product_id (+)
 group by product.name;
+
+-- Create new triggers
+create or replace trigger contract_date_ensure before
+insert on contract for each row begin :new.acceptance_date := sysdate;
+end;
