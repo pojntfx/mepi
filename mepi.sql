@@ -1,6 +1,9 @@
 -- Disable errors
 whenever sqlerror continue;
 
+-- Drop old views
+drop view liabilities;
+
 -- Drop old other constraints
 alter table contact_address drop constraint region_name_must_be_known;
 alter table customer drop constraint street_credit_must_be_in_range;
@@ -202,3 +205,9 @@ alter table plan
 add constraint warning_interest_percentage check(warning_interest between 0 and 1);
 alter table claim
 add constraint claim_rejected_boolean check(rejected in (0,1));
+
+-- Create new views
+create or replace view liabilities as
+select sum(claim.compensation_amount) as componensation_amount
+from claim
+where claim.claim_date between (sysdate - 30) and sysdate;
