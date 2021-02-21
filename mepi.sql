@@ -1,43 +1,37 @@
 /*
-                      _ 
+ _ 
  _ __ ___   ___ _ __ (_)
-| '_ ` _ \ / _ \ '_ \| |
-| | | | | |  __/ |_) | |
-|_| |_| |_|\___| .__/|_|
-               |_|
-
-Middle Earth Property Insurance (c) 2021 Felicitas Pojtinger and contributors
-
-SPDX-License-Identifier: AGPL-3.0
-
-Full source code: https://github.com/pojntfx/mepi
-To clear the database before starting: https://github.com/pojntfx/uni-db1-notes#reset-everything
-*/
-
+ | '_ ` _ \ / _ \ '_ \| |
+ | | | | | |  __/ |_) | |
+ |_| |_| |_|\___| .__/|_|
+ |_|
+ 
+ Middle Earth Property Insurance (c) 2021 Felicitas Pojtinger and contributors
+ 
+ SPDX-License-Identifier: AGPL-3.0
+ 
+ Full source code: https://github.com/pojntfx/mepi
+ To clear the database before starting: https://github.com/pojntfx/uni-db1-notes#reset-everything
+ */
 -- Disable errors
 whenever sqlerror continue;
-
 -- Drop old indexes
 drop index customer_full_name;
 drop index product_name_description;
-
 -- Drop old triggers
 drop trigger contract_date_ensure;
 drop trigger street_credibility_ensure;
-
 -- Drop old views
 drop view liabilities;
 drop view user_overview;
 drop view demands;
 drop view product_overview;
-
 -- Drop old other constraints
 alter table contact_addresses drop constraint region_name_must_be_known;
 alter table customers drop constraint street_credit_must_be_in_range;
 alter table plans drop constraint warning_interest_percentage;
 alter table claims drop constraint claim_rejected_boolean;
 alter table contracts drop constraint contract_risk_percentage;
-
 -- Drop old foreign key constraints
 alter table customers drop constraint customer_address_fk;
 alter table contracts drop constraint contract_customer_fk;
@@ -49,7 +43,6 @@ alter table bills drop constraint bill_contract_fk;
 alter table payments drop constraint payment_bill_fk;
 alter table claims drop constraint claim_contract_fk;
 alter table payouts drop constraint payout_claim_fk;
-
 -- Drop primary key constraints
 alter table contact_addresses drop constraint contact_address_pk;
 alter table customers drop constraint customer_pk;
@@ -61,7 +54,6 @@ alter table payments drop constraint payment_pk;
 alter table bills drop constraint bill_pk;
 alter table payouts drop constraint payout_pk;
 alter table claims drop constraint claim_pk;
-
 -- Drop old tables
 drop table contact_addresses;
 drop table customers;
@@ -74,10 +66,8 @@ drop table payments;
 drop table claims;
 drop table payouts;
 drop table payment_methods;
-
 -- Enable errors
 whenever sqlerror exit sql.sqlcode;
-
 -- Create new tables
 create table contact_addresses (
     region_name char(4) not null,
@@ -137,7 +127,6 @@ create table payment_methods (
     external_id varchar2(80),
     ledger varchar2(255) not null
 );
-
 -- Create identity columns
 alter table contact_addresses
 add contact_address_id number;
@@ -161,7 +150,6 @@ alter table claims
 add claim_id number;
 alter table payouts
 add payout_id number;
-
 -- Create new primary key constraints
 alter table contact_addresses
 add constraint contact_address_pk primary key(contact_address_id);
@@ -185,7 +173,6 @@ alter table payouts
 add constraint payout_pk primary key(payout_id);
 alter table claims
 add constraint claim_pk primary key(claim_id);
-
 -- Create new foreign key constraints
 alter table customers
 add constraint customer_address_fk foreign key(contact_address_id) references contact_addresses(contact_address_id);
@@ -207,7 +194,6 @@ alter table claims
 add constraint claim_contract_fk foreign key(contract_id) references contracts(contract_id);
 alter table payouts
 add constraint payout_claim_fk foreign key(claim_id) references claims(claim_id);
-
 -- Create new other constraints
 alter table contact_addresses
 add constraint region_name_must_be_known check(region_name in ('eria', 'rhov', 'gond', 'mord'));
@@ -225,7 +211,6 @@ alter table contracts
 add constraint contract_risk_percentage check(
         risk_multiplier between 0 and 2
     );
-
 -- Create new views
 create or replace view liabilities as
 select sum(claims.compensation_amount) as componensation_amount
@@ -263,7 +248,6 @@ from products,
     properties
 where products.product_id = properties.product_id (+)
 group by products.name;
-
 -- Create new triggers
 create or replace trigger contract_date_ensure before
 insert on contracts for each row begin :new.acceptance_date := sysdate;
@@ -292,13 +276,11 @@ set risk_multiplier = case
 where contracts.customer_id = customer_id;
 end if;
 end;
-/ 
+/
 -- Create new indexes
 create index customer_full_name on customers(first_name, last_name);
 create index product_name_description on products(name, description);
-
 -- Create test data
-
 -- Plans
 insert into plans (
         plan_id,
@@ -330,7 +312,6 @@ insert into plans (
         warning_interest
     )
 values (3, 'Hobbit Hole Insurance', 16, 6, '0-4', 8, 1.6);
-
 -- Aragon
 insert into contact_addresses (
         contact_address_id,
@@ -366,7 +347,7 @@ insert into products (product_id, name, description)
 values(
         2,
         'AndÃºril',
-        'AndÃºril, also called the Flame of the West, was the sword which was reforged from the shards of Narsil'
+        'AndÃºril, also called the Flame of the West.'
     );
 insert into properties (property_id, product_id)
 values(2, 2);
@@ -422,7 +403,6 @@ insert into payments (payment_id, bill_id, payment_date)
 values(2, 2, to_date('10.11.3017', 'DD.MM.YYYY'));
 insert into payouts (payout_id, claim_id, payout_date)
 values(2, 2, to_date('16.11.3017', 'DD.MM.YYYY'));
-
 -- Samwise
 insert into contact_addresses (
         contact_address_id,
@@ -458,7 +438,7 @@ insert into products (product_id, name, description)
 values(
         1,
         'barrow blades',
-        'The Barrow-blades had long, leaf-shaped blades, which were damasked with serpent-forms in red and gold'
+        'The Barrow-blades had long, leaf-shaped blades.'
     );
 insert into properties (property_id, product_id)
 values(1, 1);
@@ -514,7 +494,6 @@ insert into payments (payment_id, bill_id, payment_date)
 values(1, 1, to_date('10.11.3016', 'DD.MM.YYYY'));
 insert into payouts (payout_id, claim_id, payout_date)
 values(1, 1, to_date('16.11.3016', 'DD.MM.YYYY'));
-
 -- Gandalf the Grey
 insert into contact_addresses (
         contact_address_id,
@@ -604,7 +583,6 @@ insert into bills (bill_id, contract_id)
 values(3, 3);
 insert into payouts (payout_id, claim_id, payout_date)
 values(3, 3, to_date('08.07.3018', 'DD.MM.YYYY'));
-
 -- Legolas Greenleaf
 insert into contact_addresses (
         contact_address_id,
@@ -700,7 +678,6 @@ insert into bills (bill_id, contract_id)
 values(4, 4);
 insert into payouts (payout_id, claim_id, payout_date)
 values(4, 4, to_date('08.07.3018', 'DD.MM.YYYY'));
-
 -- Frodo
 insert into contact_addresses (
         contact_address_id,
@@ -790,7 +767,6 @@ insert into bills (bill_id, contract_id)
 values(5, 5);
 insert into payments (payment_id, bill_id, payment_date)
 values(5, 5, to_date('12.08.3011', 'DD.MM.YYYY'));
-
 -- Gimli 
 insert into contact_addresses (
         contact_address_id,
@@ -878,7 +854,6 @@ values(
     );
 insert into bills (bill_id, contract_id)
 values(6, 6);
-
 -- Legolas Greenleaf
 insert into products (product_id, name, description)
 values(
@@ -912,7 +887,6 @@ values(
     );
 insert into bills (bill_id, contract_id)
 values(7, 7);
-
 -- Gandalf the Grey
 insert into products (product_id, name, description)
 values(
@@ -946,9 +920,7 @@ values(
     );
 insert into bills (bill_id, contract_id)
 values(8, 8);
-
 -- Demo
-
 -- Complex query: Shows all products which Legolas has insured
 select *
 from products,
@@ -959,7 +931,6 @@ where products.product_id = properties.product_id
     and properties.property_id = contracts.property_id
     and contracts.customer_id = customers.customer_id
     and customers.first_name = 'Legolas';
-
 -- Test the views
 select *
 from liabilities;
@@ -970,7 +941,6 @@ select *
 from demands;
 select *
 from product_overview;
-
 -- Test the tables
 select *
 from contact_addresses;
@@ -994,24 +964,33 @@ select *
 from payouts;
 select *
 from claims;
-
--- Test the update trigger (the insert trigger is already being triggered by the test data statements)
-
--- First, try to increase the street credit; this should decrease each contract's risk for the customers by 0.1.
-select * from customers where customer_id = 2;
-select * from contracts where customer_id = 2;
-
+-- Test the update trigger (the insert trigger is already
+-- being triggered by the test data statements)
+-- First, try to increase the street credit; this should
+-- decrease each contract's risk for the customers by 0.1.
+select *
+from customers
+where customer_id = 2;
+select *
+from contracts
+where customer_id = 2;
 update customers
 set street_credit = 10
 where customer_id = 2;
-
--- Now decrease the street credit. This should increase each contract's risk for the customers by 0.1.
-select * from customers where customer_id = 2;
-select * from contracts where customer_id = 2;
-
+-- Now decrease the street credit.
+-- This should increase each contract's risk for the customers by 0.1.
+select *
+from customers
+where customer_id = 2;
+select *
+from contracts
+where customer_id = 2;
 update customers
 set street_credit = 9
 where customer_id = 2;
-
-select * from customers where customer_id = 2;
-select * from contracts where customer_id = 2;
+select *
+from customers
+where customer_id = 2;
+select *
+from contracts
+where customer_id = 2;
