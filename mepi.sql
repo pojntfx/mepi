@@ -345,7 +345,7 @@ insert into payment_method (
         external_id,
         ledger
     )
-values(2, 1, 2, 2, 'Bank of Lake-town');
+values(2, 1, 2, 'Aragorn', 'Bank of Lake-town');
 insert into contract (
         contract_id,
         acceptance_date,
@@ -431,7 +431,7 @@ insert into payment_method (
         external_id,
         ledger
     )
-values(1, 1, 1, 1, 'Trust of Sackville-Baggins');
+values(1, 1, 1, 'Sam', 'Trust of Sackville-Baggins');
 insert into contract (
         contract_id,
         acceptance_date,
@@ -476,3 +476,93 @@ insert into payment (payment_id, bill_id, payment_date)
 values(1, 1, to_date('10.11.3016', 'DD.MM.YYYY'));
 insert into payout (payout_id, claim_id, payout_date)
 values(1, 1, to_date('16.11.3016', 'DD.MM.YYYY'));
+
+-- Gandalf the Grey
+insert into contact_address (
+        contact_address_id,
+        region_name,
+        city,
+        street,
+        house_name
+    )
+values(
+        3,
+        'eria',
+        'Rivendell',
+        'Wanderers passage',
+        'Guest appartment'
+    );
+insert into customer (
+        customer_id,
+        first_name,
+        last_name,
+        birthday,
+        street_credit,
+        contact_address_id
+    )
+values(
+        3,
+        'Gandalf',
+        'The Grey',
+        NULL,
+        10,
+        3
+    );
+insert into product (product_id, name, description)
+values(
+        3,
+        'Staff',
+        'A base model wizard staff of the Istari'
+    );
+insert into property (property_id, product_id)
+values(3, 3);
+insert into payment_method (
+        payment_method_id,
+        priority,
+        customer_id,
+        external_id,
+        ledger
+    )
+values(3, 1, 3, 'Gandalf the Grey', 'Bank of Rivendell');
+insert into contract (
+        contract_id,
+        acceptance_date,
+        duration,
+        customer_id,
+        payment_method_id,
+        plan_id,
+        property_id,
+        risk_reason,
+        risk_multiplier
+    )
+values(
+        3,
+        to_date('06.04.2980', 'DD.MM.YYYY'),
+        '2-0',
+        3,
+        3,
+        3,
+        3,
+        'Is a well-known wizard with remarkable powers',
+        0.6
+    );
+insert into claim (
+        claim_id,
+        compensation_amount,
+        rejected,
+        rejected_reason,
+        contract_id,
+        claim_date
+    )
+values(
+        3,
+        1200,
+        0,
+        null,
+        3,
+        to_date('03.07.3018', 'DD.MM.YYYY')
+    );
+insert into bill (bill_id, contract_id)
+values(3, 3);
+insert into payout (payout_id, claim_id, payout_date)
+values(3, 3, to_date('08.07.3018', 'DD.MM.YYYY'));
