@@ -1,3 +1,19 @@
+/*
+                      _ 
+ _ __ ___   ___ _ __ (_)
+| '_ ` _ \ / _ \ '_ \| |
+| | | | | |  __/ |_) | |
+|_| |_| |_|\___| .__/|_|
+               |_|
+
+Middle Earth Property Insurance (c) 2021 Felicitas Pojtinger and contributors
+
+SPDX-License-Identifier: AGPL-3.0
+
+Full source code: https://github.com/pojntfx/mepi
+To clear the database before starting: https://github.com/pojntfx/uni-db1-notes#reset-everything
+*/
+
 -- Disable errors
 whenever sqlerror continue;
 
