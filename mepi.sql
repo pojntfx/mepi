@@ -3,6 +3,7 @@ whenever sqlerror continue;
 
 -- Drop old views
 drop view liabilities;
+drop view user_overview;
 
 -- Drop old other constraints
 alter table contact_address drop constraint region_name_must_be_known;
@@ -211,3 +212,14 @@ create or replace view liabilities as
 select sum(claim.compensation_amount) as componensation_amount
 from claim
 where claim.claim_date between (sysdate - 30) and sysdate;
+create or replace view user_overview as
+select customer.customer_id,
+    customer.first_name,
+    customer.last_name,
+    plan.name,
+    contract.risk_id
+from customer,
+    contract,
+    plan
+where customer.customer_id = contract.customer_id
+    and contract.plan_id = plan.plan_id;
