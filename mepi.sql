@@ -90,12 +90,12 @@ create table plan (
     max_warnings number not null,
     warning_interest float not null
 );
-create table property (
-    product_id number
-);
 create table product (
     name varchar2(80),
-    description varchar2(80)
+    description varchar2(255)
+);
+create table property (
+    product_id number
 );
 create table bill (
     contract_id number
@@ -118,7 +118,7 @@ create table payout (
 create table payment_method (
     priority integer not null,
     customer_id integer,
-    external_id integer,
+    external_id varchar2(80),
     ledger varchar2(255) not null
 );
 
@@ -261,3 +261,102 @@ begin
         update contract set risk_multiplier = case when ( risk_multiplier > 0.1 and risk_multiplier < 2 ) then risk_multiplier - 0.1 else risk_multiplier end where contract.customer_id = customer_id;
     end if;
 end;
+/
+
+-- Create test data
+
+-- Aragon
+insert into contact_address (
+        contact_address_id,
+        region_name,
+        city,
+        street,
+        house_name
+    )
+values(2, 'gond', 'Minas Tirith', 'White Tower', 7);
+insert into customer (
+        customer_id,
+        first_name,
+        last_name,
+        birthday,
+        street_credit,
+        contact_address_id
+    )
+values(
+        2,
+        'Aragorn II',
+        'Elessar',
+        to_date('01.03.2931', 'DD.MM.YYYY'),
+        9,
+        2
+    );
+insert into plan (
+        plan_id,
+        name,
+        base_monthly_cost,
+        initial_cost,
+        warning_interval,
+        max_warnings,
+        warning_interest
+    )
+values(2, 'Weapon', 20, 16, '0-6', 6, 0.25);
+insert into product (product_id, name, description)
+values(
+        2,
+        'Andúril',
+        'Andúril, also called the Flame of the West, was the sword which was reforged from the shards of Narsil'
+    );
+insert into property (property_id, product_id)
+values(2, 2);
+insert into payment_method (
+        payment_method_id,
+        priority,
+        customer_id,
+        external_id,
+        ledger
+    )
+values(2, 1, 2, 2, 'Bank of Lake-town');
+insert into contract (
+        contract_id,
+        acceptance_date,
+        duration,
+        customer_id,
+        payment_method_id,
+        plan_id,
+        property_id,
+        risk_reason,
+        risk_multiplier
+    )
+values(
+        2,
+        to_date('06.04.2980', 'DD.MM.YYYY'),
+        '2-0',
+        2,
+        2,
+        2,
+        2,
+        'King',
+        1.2
+    );
+insert into claim (
+        claim_id,
+        compensation_amount,
+        rejected,
+        rejected_reason,
+        contract_id,
+        claim_date
+    )
+values(
+        2,
+        200,
+        0,
+        null,
+        2,
+        to_date('14.11.3017', 'DD.MM.YYYY')
+    );
+insert into bill (bill_id, contract_id)
+values(2, 2);
+insert into payment (payment_id, bill_id, payment_date)
+values(2, 2, to_date('10.11.3017', 'DD.MM.YYYY'));
+insert into payout (payout_id, claim_id, payout_date)
+values(2, 2, to_date('16.11.3017', 'DD.MM.YYYY'));
