@@ -313,7 +313,7 @@ insert into contact_address (
         street,
         house_name
     )
-values(2, 'gond', 'Minas Tirith', 'White Tower', 7);
+values(2, 'gond', 'Minas Tirith', 'White Tower', 'Top Tower');
 insert into customer (
         customer_id,
         first_name,
@@ -365,7 +365,7 @@ values(
         2,
         1,
         2,
-        'King',
+        'King of Gondor',
         1.2
     );
 insert into claim (
@@ -399,7 +399,7 @@ insert into contact_address (
         street,
         house_name
     )
-values(1, 'eria', 'The Shire', 'Gardenerstreet', 4);
+values(1, 'eria', 'The Shire', 'Gardenerstreet', 'Under the Stone');
 insert into customer (
         customer_id,
         first_name,
@@ -541,7 +541,7 @@ values(
         '2-0',
         3,
         3,
-        3,
+        1,
         3,
         'Is a well-known wizard with remarkable powers',
         0.6
@@ -566,3 +566,370 @@ insert into bill (bill_id, contract_id)
 values(3, 3);
 insert into payout (payout_id, claim_id, payout_date)
 values(3, 3, to_date('08.07.3018', 'DD.MM.YYYY'));
+    
+
+-- Legolas Greenleaf
+insert into contact_address (
+        contact_address_id,
+        region_name,
+        city,
+        street,
+        house_name
+    )
+values(
+        4,
+        'eria',
+        'Mirkwood',
+        'By the lake',
+        'House of the elves'
+    );
+insert into customer (
+        customer_id,
+        first_name,
+        last_name,
+        birthday,
+        street_credit,
+        contact_address_id
+    )
+values(
+        4,
+        'Legolas',
+        'Greenleaf',
+        TO_DATE('14.03.0185', 'DD.MM.YYYY'),
+        9,
+        4
+    );
+insert into product (product_id, name, description)
+values(
+        4,
+        'Dual Long Knives',
+        'Base Model Long Knifes'
+    );
+insert into property (property_id, product_id)
+values(4, 4);
+insert into payment_method (
+        payment_method_id,
+        priority,
+        customer_id,
+        external_id,
+        ledger
+    )
+values(
+        4,
+        1,
+        4,
+        'Legolas Greenleaf',
+        'Bank of Rivendell'
+    );
+insert into contract (
+        contract_id,
+        acceptance_date,
+        duration,
+        customer_id,
+        payment_method_id,
+        plan_id,
+        property_id,
+        risk_reason,
+        risk_multiplier
+    )
+values(
+        4,
+        to_date('06.04.3018', 'DD.MM.YYYY'),
+        '2-0',
+        4,
+        4,
+        1,
+        4,
+        'Remarkable fighter. Somehow often in trouble',
+        1
+    );
+insert into claim (
+        claim_id,
+        compensation_amount,
+        rejected,
+        rejected_reason,
+        contract_id,
+        claim_date
+    )
+values(
+        4,
+        500,
+        1,
+        'We cannot pay him if he looses one of his two knifes',
+        4,
+        to_date('03.07.3018', 'DD.MM.YYYY')
+    );
+insert into bill (bill_id, contract_id)
+values(4, 4);
+insert into payout (payout_id, claim_id, payout_date)
+values(4, 4, to_date('08.07.3018', 'DD.MM.YYYY'));
+
+
+-- Frodo
+insert into contact_address (
+        contact_address_id,
+        region_name,
+        city,
+        street,
+        house_name
+    )
+values(5, 'eria', 'The Shire', 'Chosenstreet', 'The lowered ceiling');
+insert into customer (
+        customer_id,
+        first_name,
+        last_name,
+        birthday,
+        street_credit,
+        contact_address_id
+    )
+values(
+        5,
+        'Frodo',
+        'Beutlin',
+        to_date('22.9.2968', 'DD.MM.YYYY'),
+        8,
+        5
+    );
+insert into product (product_id, name, description)
+values(
+        5,
+        'short sword',
+        'Handy short sword'
+    );
+insert into property (property_id, product_id)
+values(5, 5);
+insert into payment_method (
+        payment_method_id,
+        priority,
+        customer_id,
+        external_id,
+        ledger
+    )
+values(5, 5, 5, 'Frodo', 'Trust of Sackville-Baggins');
+insert into contract (
+        contract_id,
+        acceptance_date,
+        duration,
+        customer_id,
+        payment_method_id,
+        plan_id,
+        property_id,
+        risk_reason,
+        risk_multiplier
+    )
+values(
+        5,
+        to_date('10.11.3010', 'DD.MM.YYYY'),
+        '2-0',
+        5,
+        5,
+        1,
+        5,
+        'Is on a heavy mission',
+        1.8
+    );
+insert into claim (
+        claim_id,
+        compensation_amount,
+        rejected,
+        rejected_reason,
+        contract_id,
+        claim_date
+    )
+values(
+        5,
+        10,
+        1,
+        'There are still outstanding receivables',
+        5,
+        to_date('12.10.3010', 'DD.MM.YYYY')
+    );
+insert into bill (bill_id, contract_id)
+values(5, 5);
+insert into payment (payment_id, bill_id, payment_date)
+values(5, 5, to_date('12.08.3011', 'DD.MM.YYYY'));
+
+
+-- Gimli 
+insert into contact_address (
+        contact_address_id,
+        region_name,
+        city,
+        street,
+        house_name
+    )
+values(
+        6,
+        'eria',
+        'Glittering Caves',
+        'Cavetown',
+        'Gimlis Cave'
+    );
+insert into customer (
+        customer_id,
+        first_name,
+        last_name,
+        birthday,
+        street_credit,
+        contact_address_id
+    )
+values(
+        6,
+        'Gimli',
+        'Caves',
+        TO_DATE('5.10.2978', 'DD.MM.YYYY'),
+        9,
+        6
+    );
+insert into product (product_id, name, description)
+values(
+        6,
+        'Battle axe',
+        'Chop every tree and enemy'
+    );
+insert into property (property_id, product_id)
+values(6, 6);
+insert into payment_method (
+        payment_method_id,
+        priority,
+        customer_id,
+        external_id,
+        ledger
+    )
+values(6, 1, 6, 'Gimli (dwarf)', 'Bank of Rivendell');
+insert into contract (
+        contract_id,
+        acceptance_date,
+        duration,
+        customer_id,
+        payment_method_id,
+        plan_id,
+        property_id,
+        risk_reason,
+        risk_multiplier
+    )
+values(
+        6,
+        to_date('12.01.3017', 'DD.MM.YYYY'),
+        '2-0',
+        6,
+        6,
+        1,
+        6,
+        'Short but strong',
+        1
+    );
+insert into claim (
+        claim_id,
+        compensation_amount,
+        rejected,
+        rejected_reason,
+        contract_id,
+        claim_date
+    )
+values(
+        6,
+        200,
+        1,
+        'We do not pay dwarfs (even though they are customers)',
+        6,
+        to_date('04.04.3019', 'DD.MM.YYYY')
+    );
+insert into bill (bill_id, contract_id)
+values(6, 6);
+
+
+-- Legolas Greenleaf
+insert into product (product_id, name, description)
+values(
+        7,
+        'Roach',
+        'Brown strong horse'
+    );
+insert into property (property_id, product_id)
+values(7, 7);
+insert into contract (
+        contract_id,
+        acceptance_date,
+        duration,
+        customer_id,
+        payment_method_id,
+        plan_id,
+        property_id,
+        risk_reason,
+        risk_multiplier
+    )
+values(
+        7,
+        to_date('06.04.3019', 'DD.MM.YYYY'),
+        '2-0',
+        4,
+        4,
+        2,
+        7,
+        'Remarkable fighter. Somehow often in trouble',
+        1
+    );
+insert into bill (bill_id, contract_id)
+values(7, 7);
+
+
+-- Gandalf the Grey
+insert into product (product_id, name, description)
+values(
+        8,
+        'Glamdring',
+        'An elven sword found in a troll cave'
+    );
+insert into property (property_id, product_id)
+values(8, 8);
+insert into contract (
+        contract_id,
+        acceptance_date,
+        duration,
+        customer_id,
+        payment_method_id,
+        plan_id,
+        property_id,
+        risk_reason,
+        risk_multiplier
+    )
+values(
+        8,
+        to_date('06.04.2982', 'DD.MM.YYYY'),
+        '2-0',
+        3,
+        3,
+        1,
+        8,
+        'Is a well-known wizard with remarkable powers',
+        0.6
+    );
+insert into bill (bill_id, contract_id)
+values(8, 8);
+
+
+-- Demo
+
+select * from product, property, contract, customer where product.product_id = property.product_id and property.property_id = contract.property_id and contract.customer_id = customer.customer_id and customer.first_name = 'Legolas';
+
+select * from liabilities;
+
+select * from user_overview order by customer_id desc;
+
+select * from demands;
+
+select * from product_overview;
+
+------
+select * from contact_address;
+select * from customer;
+select * from contract;
+select * from payment_method;
+select * from property;
+select * from product;
+select * from bill;
+select * from plan;
+select * from payment;
+select * from payout;
+select * from claim;
