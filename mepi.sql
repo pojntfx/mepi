@@ -390,3 +390,89 @@ insert into payment (payment_id, bill_id, payment_date)
 values(2, 2, to_date('10.11.3017', 'DD.MM.YYYY'));
 insert into payout (payout_id, claim_id, payout_date)
 values(2, 2, to_date('16.11.3017', 'DD.MM.YYYY'));
+
+-- Samwise
+insert into contact_address (
+        contact_address_id,
+        region_name,
+        city,
+        street,
+        house_name
+    )
+values(1, 'eria', 'The Shire', 'Gardenerstreet', 4);
+insert into customer (
+        customer_id,
+        first_name,
+        last_name,
+        birthday,
+        street_credit,
+        contact_address_id
+    )
+values(
+        1,
+        'Samwise',
+        'Gamgee',
+        to_date('06.04.2980', 'DD.MM.YYYY'),
+        8,
+        1
+    );
+insert into product (product_id, name, description)
+values(
+        1,
+        'barrow blades',
+        'The Barrow-blades had long, leaf-shaped blades, which were damasked with serpent-forms in red and gold'
+    );
+insert into property (property_id, product_id)
+values(1, 1);
+insert into payment_method (
+        payment_method_id,
+        priority,
+        customer_id,
+        external_id,
+        ledger
+    )
+values(1, 1, 1, 1, 'Trust of Sackville-Baggins');
+insert into contract (
+        contract_id,
+        acceptance_date,
+        duration,
+        customer_id,
+        payment_method_id,
+        plan_id,
+        property_id,
+        risk_reason,
+        risk_multiplier
+    )
+values(
+        1,
+        to_date('06.04.2980', 'DD.MM.YYYY'),
+        '2-0',
+        1,
+        1,
+        1,
+        1,
+        'Frodos companion',
+        1.15
+    );
+insert into claim (
+        claim_id,
+        compensation_amount,
+        rejected,
+        rejected_reason,
+        contract_id,
+        claim_date
+    )
+values(
+        1,
+        80,
+        0,
+        null,
+        1,
+        to_date('14.11.3016', 'DD.MM.YYYY')
+    );
+insert into bill (bill_id, contract_id)
+values(1, 1);
+insert into payment (payment_id, bill_id, payment_date)
+values(1, 1, to_date('10.11.3016', 'DD.MM.YYYY'));
+insert into payout (payout_id, claim_id, payout_date)
+values(1, 1, to_date('16.11.3016', 'DD.MM.YYYY'));
