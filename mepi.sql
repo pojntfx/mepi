@@ -977,3 +977,24 @@ select *
 from payout;
 select *
 from claim;
+
+-- Test the update trigger (the insert trigger is already being triggered by the test data statements)
+
+-- First, try to increase the street credit; this should decrease each contract's risk for the customer by 0.1.
+select * from customer where customer_id = 2;
+select * from contract where customer_id = 2;
+
+update customer
+set street_credit = 10
+where customer_id = 2;
+
+-- Now decrease the street credit. This should increase each contract's risk for the customer by 0.1.
+select * from customer where customer_id = 2;
+select * from contract where customer_id = 2;
+
+update customer
+set street_credit = 9
+where customer_id = 2;
+
+select * from customer where customer_id = 2;
+select * from contract where customer_id = 2;
