@@ -1,6 +1,10 @@
 -- Disable errors
 whenever sqlerror continue;
 
+-- Drop old indexes
+drop index customer_full_name;
+drop index product_name_description;
+
 -- Drop old triggers
 drop trigger contract_date_ensure;
 drop trigger street_credibility_ensure;
@@ -262,6 +266,10 @@ begin
     end if;
 end;
 /
+
+-- Create new indexes
+create index customer_full_name on customer(first_name, last_name);
+create index product_name_description on product(name, description);
 
 -- Create test data
 
