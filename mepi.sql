@@ -243,6 +243,7 @@ where customers.customer_id = contracts.customer_id
     and contracts.plan_id = plans.plan_id;
 create or replace view demands as
 select bills.bill_id,
+    customers.customer_id,
     customers.first_name,
     customers.last_name,
     plans.base_monthly_cost
