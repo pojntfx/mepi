@@ -82,8 +82,7 @@ create table plan (
     warning_interest float not null
 );
 create table property (
-    product_id number,
-    contract_id number
+    product_id number
 );
 create table product (
     name varchar2(80),
